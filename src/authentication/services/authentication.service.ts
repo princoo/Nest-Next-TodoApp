@@ -3,7 +3,7 @@ import { Model } from 'mongoose';
 import { CreateAuthenticationDto } from '../dto/create-authentication.dto';
 import { UpdateAuthenticationDto } from '../dto/update-authentication.dto';
 import {InjectModel} from '@nestjs/mongoose'
-import { User } from 'src/shcemas/user.schema';
+import { User } from 'src/schemas/user.schema';
 import { getUserByEmail } from '../utils/existing';
 import { jwtService } from './token.service';
 

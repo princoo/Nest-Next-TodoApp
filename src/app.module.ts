@@ -3,14 +3,16 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthenticationModule } from './authentication/authentication.module';
 import { MongooseModule } from '@nestjs/mongoose';
-import { AuthenticationController } from './authentication/authentication.controller';
 import { signUpData } from './authentication/middlewares/validate.middleware';
+import * as dotenv from 'dotenv';
+
+dotenv.config();
 
 @Module({
   imports: [
     AuthenticationModule,
     MongooseModule.forRoot(
-      'mongodb+srv://princo:OU6nx8E4lZcogCuJ@cluster0.i0nhr.mongodb.net/store?retryWrites=true&w=majority',
+      process.env.MONGO_URL,
     ),
   ],
   controllers: [AppController,],

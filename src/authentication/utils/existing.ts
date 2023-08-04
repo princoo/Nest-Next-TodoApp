@@ -1,5 +1,5 @@
 import { Model } from "mongoose";
-import { User } from "src/shcemas/user.schema";
+import { User } from "src/schemas/user.schema";
 
 
  interface ReturnedUser{
