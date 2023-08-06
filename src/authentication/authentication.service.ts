@@ -1,11 +1,11 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable,HttpException,HttpStatus } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { CreateAuthenticationDto } from '../dto/create-authentication.dto';
 import { UpdateAuthenticationDto } from '../dto/update-authentication.dto';
 import {InjectModel} from '@nestjs/mongoose'
-import { User } from 'src/schemas/user.schema';
+import { User } from 'src/models/user.schema';
 import { getUserByEmail } from '../utils/existing';
-import { jwtService } from './token.service';
+import { jwtService } from '../services/token.service';
 
 @Injectable()
 export class AuthenticationService {
@@ -19,7 +19,7 @@ export class AuthenticationService {
       const data = await getUserByEmail(createAuthenticationDto.email,this.userModel)
       if(data) throw new BadRequestException('This user already exists !!!')
       const result = await this.userModel.create(createAuthenticationDto)
-      const token = this.jwtService.generateToken(result._id.toString())
+      const token = this.jwtService.generateToken(data.email.toString())
       return {result,token};
     } catch (error) {
       throw error 
@@ -27,9 +27,17 @@ export class AuthenticationService {
 
   }
 
-  findAll() {
-    return `This action returns all authentication`;
-  }
+  async login(loginBody: CreateAuthenticationDto): Promise<any> {
+      const userData = await getUserByEmail(loginBody.email,this.userModel)
+      if(!userData) throw new HttpException('user does not exist',HttpStatus.FOUND)
+      if (userData.password == loginBody.password) {
+        const token = this.jwtService.generateToken(userData.email.toString())
+        return {userData,token};      
+      }
+      else{
+        throw new HttpException('Wrong password',HttpStatus.NOT_ACCEPTABLE)
+      }
+}
 
   findOne(id: number) {
     return `This action returns a #${id} authentication`;

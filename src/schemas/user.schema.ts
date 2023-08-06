@@ -1,20 +1,7 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
+import * as Joi from "joi";
 
-export type CatDocument = HydratedDocument<User>;
-
-
-@Schema()
-export class User {
-
-@Prop({ required: true })
-username: string;
-  
-@Prop({required:true})
-email: string;
-
-@Prop({required:true})
-password: string;
-}
-
-export const UserSchema = SchemaFactory.createForClass(User);
+export const signUpSchema = Joi.object({
+    username: Joi.string().required(),
+    email: Joi.string().required(),
+    password: Joi.string().required()
+})
